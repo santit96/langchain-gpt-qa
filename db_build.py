@@ -2,31 +2,30 @@
 #  Module: Vector DB Build
 # =========================
 import os
+
 import openai
+from dotenv import load_dotenv
+from langchain.document_loaders import DirectoryLoader, PyPDFLoader
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import FAISS
 
 from config.config import cfg
-from dotenv import load_dotenv
-from langchain.vectorstores import FAISS
-from langchain.text_splitter import RecursiveCharacterTextSplitter
-from langchain.document_loaders import PyPDFLoader, DirectoryLoader
-from langchain.embeddings import OpenAIEmbeddings
-
 
 load_dotenv()
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 
 # Build vector database
-def run_db_build():
+def run_db_build() -> None:
     # Load document
-    loader = DirectoryLoader(cfg.DATA_PATH,
-                             glob='*.pdf',
-                             loader_cls=PyPDFLoader)
+    loader = DirectoryLoader(cfg.DATA_PATH, glob="*.pdf", loader_cls=PyPDFLoader)
     documents = loader.load()
 
     # Transform document
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=cfg.CHUNK_SIZE,
-                                                   chunk_overlap=cfg.CHUNK_OVERLAP)
+    text_splitter = RecursiveCharacterTextSplitter(
+        chunk_size=cfg.CHUNK_SIZE, chunk_overlap=cfg.CHUNK_OVERLAP
+    )
     texts = text_splitter.split_documents(documents)
 
     # Get embeddings

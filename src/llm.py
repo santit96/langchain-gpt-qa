@@ -1,25 +1,19 @@
-'''
+"""
 ===========================================
         Module: Open-source LLM Setup
 ===========================================
-'''
-from langchain.chat_models import ChatOpenAI
+"""
 from dotenv import find_dotenv, load_dotenv
-import box
-import yaml
+from langchain.chat_models import ChatOpenAI
+from langchain.chat_models.base import BaseChatModel
+
+from config.config import cfg
 
 # Load environment variables from .env file
 load_dotenv(find_dotenv())
 
-# Import config vars
-with open('config/config.yml', 'r', encoding='utf8') as ymlfile:
-    cfg = box.Box(yaml.safe_load(ymlfile))
 
-
-def build_llm():
+def build_llm() -> BaseChatModel:
     # Local CTransformers model
-    llm = ChatOpenAI(
-        model=cfg.MODEL,
-        temperature=cfg.TEMPERATURE
-    )
+    llm = ChatOpenAI(model=cfg.MODEL, temperature=cfg.TEMPERATURE)
     return llm
