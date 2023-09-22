@@ -1,0 +1,4 @@
+langchain
+python-box
+python-dotenv
+openai
